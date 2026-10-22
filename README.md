@@ -10,6 +10,8 @@ cd hwz-todo
 claude
 ```
 
+Beim ersten Start fragt Claude, ob dem Ordner vertraut wird: **«Yes, proceed»** wählen. Erst dann gelten die Freigaben des Projekts und es kommen kaum Rückfragen.
+
 Danach `/` tippen. Es erscheinen sechs Befehle.
 
 ## Die sechs Befehle
@@ -39,7 +41,8 @@ Fertige Prompts stehen in `docs/PROMPTS.md`.
 | Problem                       | Lösung                                                                 |
 | ----------------------------- | ---------------------------------------------------------------------- |
 | «Port 5173 is already in use» | Das andere Terminal mit dem Dev-Server schliessen oder `npm run dev -- --port 5174` |
-| npm-Fehler beim Installieren  | `node -v` prüfen (mindestens 20.19), dann `npm ci` erneut ausführen    |
+| npm-Fehler beim Installieren  | `node -v` prüfen (aktuelle LTS von nodejs.org), dann: «Führe node scripts/setup.mjs --tested aus.» |
 | gh nicht angemeldet           | `! gh auth login` in Claude tippen und den Schritten im Browser folgen |
 | Pages zeigt 404               | 2 Minuten warten, dann Seite neu laden; sonst `/publish` erneut        |
+| «API Error: 502» oder Abbruch mitten im Satz | Der AI Hub hatte einen Aussetzer. Eine Minute warten, dann denselben Befehl noch einmal. |
 | Agent hängt fest              | `Esc` drücken, dann: «Stopp. Erklär in 3 Sätzen, wo es klemmt.»        |

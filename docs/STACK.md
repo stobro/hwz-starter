@@ -20,62 +20,69 @@ Dieses Dokument ist die einzige Quelle für Technik, Versionen und Konfiguration
 | Vitest, Testing Library, jsdom | Automatische Tests, auch für Komponenten, ohne echten Browser. |
 | ESLint (flat config), Prettier | Prüfen und formatieren den Code einheitlich. |
 
-**Node:** mindestens 20.19 (`engines: ">=20.19"`). Empfohlen ist die aktuelle LTS-Version aus `.nvmrc` (24.22.1).
+**Node:** immer die aktuelle LTS-Version (`.nvmrc` enthält `lts/*`). Das Minimum in `engines` setzt `scripts/setup.mjs` passend zu den installierten Paketen.
 
-**Versionen:** Alle Versionen sind exakt gepinnt (kein `^`, kein `~`). Ermittelt mit `npm view <paket> version` am 22. Oktober 2026.
-Ausnahmen mit Grund: `typescript` 6.0.3 statt 7.x (typescript-eslint unterstützt nur bis 6.0), `vitest` 4.1.12 und `jsdom` 29.1.1 statt 5.x/30.x (die neuen Versionen verlangen Node 22 oder 24 und brechen `>=20.19`).
+**Versionen: immer die neuesten.** Task 1 installiert mit `node scripts/setup.mjs` von jedem Paket die neueste stabile Version, die
+- auf der lokalen Node-Version und auf der aktuellen Node-LTS läuft (`engines`),
+- zu allen anderen Paketen passt (`peerDependencies`, gegenseitige Anforderungen),
+- nicht als veraltet markiert ist.
+- mindestens einen Tag alt ist (ganz frische Veröffentlichungen sind manchmal für ein paar Stunden kaputt).
+
+Das Skript schreibt jede Version exakt in `package.json` (kein `^`, kein `~`). Ab dann ist `package.json` mit `package-lock.json` massgebend. Passt eine neueste Version noch nicht zu den anderen (z. B. eine neue TypeScript-Hauptversion, die typescript-eslint noch nicht unterstützt), nimmt das Skript automatisch die neueste passende.
+
+**Sicherheitsnetz:** Schlägt die Installation der neuesten Versionen fehl, nimmt das Skript von selbst den zuletzt geprüften Stand (Spalte «Zuletzt geprüft» unten, Node 20.19 bis 24). Ist erst der Check rot, installiert `node scripts/setup.mjs --tested` diesen Stand.
 
 ## Erlaubt-Liste
 
-Genau diese Pakete in genau diesen Versionen. Alles andere nur nach Rückfrage (AGENTS.md, Regel 5).
+Genau diese Pakete. Alles andere nur nach Rückfrage (AGENTS.md, Regel 5). Dieselbe Liste steht in `scripts/setup.mjs`.
 
-| Paket | Version | Art | Wozu |
-| ----- | ------- | --- | ---- |
-| `@dnd-kit/core` | 6.3.1 | App | Drag and Drop (Bau 2) |
-| `@dnd-kit/sortable` | 10.0.0 | App | Sortieren per Drag and Drop (Bau 2) |
-| `@dnd-kit/utilities` | 3.2.2 | App | Hilfen für dnd-kit (CSS-Transform) |
-| `@fontsource-variable/fredoka` | 5.3.0 | App | Schrift Candy (Überschrift) |
-| `@fontsource-variable/inter` | 5.3.0 | App | Schrift Aurora (Text) |
-| `@fontsource-variable/jetbrains-mono` | 5.3.0 | App | Mono-Schrift (Zahlen, Neon-Akzente) |
-| `@fontsource-variable/nunito` | 5.3.0 | App | Schrift Candy (Text) |
-| `@fontsource-variable/outfit` | 5.3.0 | App | Schrift Aurora (Überschrift) |
-| `@fontsource-variable/space-grotesk` | 5.3.0 | App | Schrift Neon |
-| `canvas-confetti` | 1.9.4 | App | Konfetti |
-| `class-variance-authority` | 0.7.1 | App | Varianten für shadcn-Bausteine |
-| `cn` | 0.5.0 | App | Klassen zusammenführen (cn(), von shadcn genutzt) |
-| `lucide-react` | 1.61.0 | App | Icons |
-| `motion` | 14.5.0 | App | Animationen |
-| `next-themes` | 0.4.6 | App | von der shadcn-Sonner-Komponente verlangt |
-| `radix-ui` | 1.8.1 | App | Grundlage der shadcn-Bausteine |
-| `react` | 19.3.1 | App | Oberfläche |
-| `react-dom` | 19.3.1 | App | React im Browser |
-| `sonner` | 2.0.8 | App | Toasts |
-| `@eslint/js` | 10.0.1 | Entwicklung | ESLint-Grundregeln |
-| `@tailwindcss/vite` | 4.3.3 | Entwicklung | Tailwind in Vite |
-| `@testing-library/dom` | 10.4.2 | Entwicklung | Testing Library (Basis) |
-| `@testing-library/jest-dom` | 7.0.1 | Entwicklung | Zusätzliche Test-Prüfungen wie toBeVisible |
-| `@testing-library/react` | 16.3.3 | Entwicklung | React-Komponenten testen |
-| `@testing-library/user-event` | 14.6.8 | Entwicklung | Klicks und Tippen im Test |
-| `@types/canvas-confetti` | 1.9.0 | Entwicklung | Typen für canvas-confetti |
-| `@types/node` | 24.19.2 | Entwicklung | Typen für Node (vite.config.ts) |
-| `@types/react` | 19.3.0 | Entwicklung | Typen für React |
-| `@types/react-dom` | 19.3.0 | Entwicklung | Typen für React DOM |
-| `@vitejs/plugin-react` | 6.1.2 | Entwicklung | React in Vite |
-| `eslint` | 10.13.0 | Entwicklung | Code prüfen |
-| `eslint-plugin-react-hooks` | 7.1.1 | Entwicklung | Regeln für React-Hooks |
-| `eslint-plugin-react-refresh` | 0.5.7 | Entwicklung | Regeln für schnelles Neuladen |
-| `globals` | 17.13.0 | Entwicklung | Browser-Globale für ESLint |
-| `jsdom` | 29.1.1 | Entwicklung | Browser-Ersatz für Tests |
-| `prettier` | 3.9.10 | Entwicklung | Formatieren |
-| `shadcn` | 4.22.1 | Entwicklung | CLI für shadcn/ui (npx shadcn add) |
-| `tailwindcss` | 4.3.3 | Entwicklung | Tailwind CSS |
-| `tw-animate-css` | 1.4.0 | Entwicklung | Animationen für shadcn-Bausteine |
-| `typescript` | 6.0.3 | Entwicklung | TypeScript |
-| `typescript-eslint` | 8.72.0 | Entwicklung | ESLint für TypeScript |
-| `vite` | 8.3.5 | Entwicklung | Build-Werkzeug |
-| `vitest` | 4.1.12 | Entwicklung | Test-Runner |
+| Paket | Art | Wozu | Zuletzt geprüft |
+| ----- | --- | ---- | --------------- |
+| `@dnd-kit/core` | App | Drag and Drop (Bau 2) | 6.3.1 |
+| `@dnd-kit/sortable` | App | Sortieren per Drag and Drop (Bau 2) | 10.0.0 |
+| `@dnd-kit/utilities` | App | Hilfen für dnd-kit (CSS-Transform) | 3.2.2 |
+| `@fontsource-variable/fredoka` | App | Schrift Candy (Überschrift) | 5.3.0 |
+| `@fontsource-variable/inter` | App | Schrift Aurora (Text) | 5.3.0 |
+| `@fontsource-variable/jetbrains-mono` | App | Mono-Schrift (Zahlen, Neon-Akzente) | 5.3.0 |
+| `@fontsource-variable/nunito` | App | Schrift Candy (Text) | 5.3.0 |
+| `@fontsource-variable/outfit` | App | Schrift Aurora (Überschrift) | 5.3.0 |
+| `@fontsource-variable/space-grotesk` | App | Schrift Neon | 5.3.0 |
+| `canvas-confetti` | App | Konfetti | 1.9.4 |
+| `class-variance-authority` | App | Varianten für shadcn-Bausteine | 0.7.1 |
+| `cn` | App | Klassen zusammenführen (cn(), von shadcn genutzt) | 0.5.0 |
+| `lucide-react` | App | Icons | 1.61.0 |
+| `motion` | App | Animationen | 14.5.0 |
+| `next-themes` | App | von der shadcn-Sonner-Komponente verlangt | 0.4.6 |
+| `radix-ui` | App | Grundlage der shadcn-Bausteine | 1.8.1 |
+| `react` | App | Oberfläche | 19.3.1 |
+| `react-dom` | App | React im Browser | 19.3.1 |
+| `sonner` | App | Toasts | 2.0.8 |
+| `@eslint/js` | Entwicklung | ESLint-Grundregeln | 10.0.1 |
+| `@tailwindcss/vite` | Entwicklung | Tailwind in Vite | 4.3.3 |
+| `@testing-library/dom` | Entwicklung | Testing Library (Basis) | 10.4.2 |
+| `@testing-library/jest-dom` | Entwicklung | Zusätzliche Test-Prüfungen wie toBeVisible | 7.0.1 |
+| `@testing-library/react` | Entwicklung | React-Komponenten testen | 16.3.3 |
+| `@testing-library/user-event` | Entwicklung | Klicks und Tippen im Test | 14.6.8 |
+| `@types/canvas-confetti` | Entwicklung | Typen für canvas-confetti | 1.9.0 |
+| `@types/node` | Entwicklung | Typen für Node (vite.config.ts) | 24.19.2 |
+| `@types/react` | Entwicklung | Typen für React | 19.3.0 |
+| `@types/react-dom` | Entwicklung | Typen für React DOM | 19.3.0 |
+| `@vitejs/plugin-react` | Entwicklung | React in Vite | 6.1.2 |
+| `eslint` | Entwicklung | Code prüfen | 10.13.0 |
+| `eslint-plugin-react-hooks` | Entwicklung | Regeln für React-Hooks | 7.1.1 |
+| `eslint-plugin-react-refresh` | Entwicklung | Regeln für schnelles Neuladen | 0.5.7 |
+| `globals` | Entwicklung | Browser-Globale für ESLint | 17.13.0 |
+| `jsdom` | Entwicklung | Browser-Ersatz für Tests | 29.1.1 |
+| `prettier` | Entwicklung | Formatieren | 3.9.10 |
+| `shadcn` | Entwicklung | CLI für shadcn/ui (npx shadcn add) | 4.22.1 |
+| `tailwindcss` | Entwicklung | Tailwind CSS | 4.3.3 |
+| `tw-animate-css` | Entwicklung | Animationen für shadcn-Bausteine | 1.4.0 |
+| `typescript` | Entwicklung | TypeScript | 6.0.3 |
+| `typescript-eslint` | Entwicklung | ESLint für TypeScript | 8.72.0 |
+| `vite` | Entwicklung | Build-Werkzeug | 8.3.5 |
+| `vitest` | Entwicklung | Test-Runner | 4.1.12 |
 
-Zur Installation eines dieser Pakete (falls es fehlt) immer mit Version: `npm install <paket>@<version>`.
+Alle diese Pakete installiert Task 1. Fehlt später doch eines: `npm install <paket>` (dank `.npmrc` wird die Version exakt gespeichert).
 
 ## shadcn/ui-Bausteine
 
@@ -121,22 +128,26 @@ Die Dateien in `src/components/ui/` werden nicht von Hand umgeschrieben. Anpassu
 
 ## Task 1: Projekt einrichten
 
-Diese Schritte laufen ohne jede Rückfrage. Keine interaktiven Prompts. Der Agent führt sie der Reihe nach aus und erstellt die Dateien mit genau dem Inhalt unten. Er ändert nichts daran.
+Diese Schritte laufen ohne jede Rückfrage. Keine interaktiven Prompts. Der Agent führt sie der Reihe nach aus.
 
-1. **Node prüfen:** `node -v`. Die Version muss 20.19 oder höher sein. Sonst stopp und der Person sagen: «Bitte Node 24 LTS von nodejs.org installieren.»
-2. **Dateien anlegen:** Alle Dateien aus «Dateien für Task 1» unten mit exakt diesem Inhalt erstellen: `package.json`, `.npmrc`, `.prettierrc`, `.prettierignore`, `vite.config.ts`, `tsconfig.json`, `tsconfig.app.json`, `tsconfig.node.json`, `eslint.config.js`, `vitest.setup.ts`, `components.json`, `index.html`, `src/index.css`, `src/lib/utils.ts`, `src/main.tsx`, `src/App.tsx`, `src/App.test.tsx`.
-3. **Look setzen:** In `index.html` den Wert von `data-look` auf den Look aus docs/SPEC.md setzen (`aurora`, `candy` oder `neon`). Steht dort nichts, bleibt `aurora`.
-4. **Pakete installieren:** `npm install --no-audit --no-fund`. Das erzeugt `package-lock.json`. Diese Datei gehört ins Repo (die Veröffentlichung braucht sie).
-5. **shadcn-Bausteine holen:** `npx shadcn add button input card checkbox badge dialog dropdown-menu tooltip progress separator sonner --yes --silent`.
-   Bricht der Befehl mit «Connect Timeout» ab, einfach genau gleich noch einmal ausführen (der Server von shadcn ist manchmal langsam).
-6. **Prüfen, dass nichts dazukam:** `package.json` muss noch genau den Inhalt von unten haben. Hat shadcn ein Paket ergänzt, stopp und die Person fragen (AGENTS.md, Regel 5).
-7. **Check:** `npm run check`. Er muss grün sein. Die letzte Zeile lautet `✓ built in …`.
-8. **Ansehen:** Dev-Server im Hintergrund starten (`npm run dev`) und der Person die Adresse http://localhost:5173/hwz-todo/ nennen.
-9. **Abhaken:** In docs/TASKS.md Task 1 auf `[x]` setzen.
+1. **Node prüfen:** `node -v`. Die Version muss 20.19 oder höher sein. Sonst stopp und der Person sagen: «Bitte die aktuelle LTS-Version von nodejs.org installieren.»
+2. **Setup ausführen:** `node scripts/setup.mjs`. Du schreibst in diesem Task selbst keine Datei. Das Skript
+   - legt alle Dateien aus «Dateien für Task 1» unten wörtlich an (bestehende Dateien lässt es in Ruhe),
+   - setzt in `index.html` den Look aus docs/SPEC.md (`aurora`, `candy` oder `neon`),
+   - ermittelt die neuesten passenden Versionen, trägt sie exakt in `package.json` ein und installiert alles (dabei entsteht `package-lock.json`, sie gehört ins Repo),
+   - holt die shadcn-Bausteine und versucht es bei Netzproblemen selbst dreimal.
+   Die letzte Zeile lautet `✓ Setup fertig. Weiter mit: npm run check`. Das Skript braucht 1 bis 3 Minuten.
+   - Meldet das Skript «shadcn hat Pakete ergänzt, die nicht in der Erlaubt-Liste stehen»: stopp und die Person fragen (AGENTS.md, Regel 5).
+3. **Check:** `npm run check`. Er muss grün sein. Die letzte Zeile lautet `✓ built in …`.
+   - Ist er rot: `node scripts/setup.mjs --tested`, dann `npm run check` erneut. Der Person sagen, dass der zuletzt geprüfte Stand installiert wurde.
+4. **Ansehen:** Dev-Server im Hintergrund starten (`npm run dev`) und der Person die Adresse http://localhost:5173/hwz-todo/ nennen.
+5. **Abhaken:** In docs/TASKS.md Task 1 auf `[x]` setzen.
 
 Hinweis für den Test-zuerst-Grundsatz: In Task 1 ist der Test `src/App.test.tsx` gleich dabei, weil es vorher keinen Code gibt, der rot sein könnte.
 
 ## Dateien für Task 1
+
+`scripts/setup.mjs` legt diese Dateien in Task 1 selbst an. Sie stehen hier vollständig, damit klar ist, was im Projekt liegt. `dependencies`, `devDependencies` und `engines` in `package.json` füllt das Skript. Darum stehen sie hier leer beziehungsweise mit dem Minimum.
 
 
 ### `package.json`
@@ -160,53 +171,8 @@ Hinweis für den Test-zuerst-Grundsatz: In Task 1 ist der Test `src/App.test.tsx
     "format": "prettier --write .",
     "check": "npm run typecheck && npm run lint && npm run test -- --run && npm run build"
   },
-  "dependencies": {
-    "@dnd-kit/core": "6.3.1",
-    "@dnd-kit/sortable": "10.0.0",
-    "@dnd-kit/utilities": "3.2.2",
-    "@fontsource-variable/fredoka": "5.3.0",
-    "@fontsource-variable/inter": "5.3.0",
-    "@fontsource-variable/jetbrains-mono": "5.3.0",
-    "@fontsource-variable/nunito": "5.3.0",
-    "@fontsource-variable/outfit": "5.3.0",
-    "@fontsource-variable/space-grotesk": "5.3.0",
-    "canvas-confetti": "1.9.4",
-    "class-variance-authority": "0.7.1",
-    "cn": "0.5.0",
-    "lucide-react": "1.61.0",
-    "motion": "14.5.0",
-    "next-themes": "0.4.6",
-    "radix-ui": "1.8.1",
-    "react": "19.3.1",
-    "react-dom": "19.3.1",
-    "sonner": "2.0.8"
-  },
-  "devDependencies": {
-    "@eslint/js": "10.0.1",
-    "@tailwindcss/vite": "4.3.3",
-    "@testing-library/dom": "10.4.2",
-    "@testing-library/jest-dom": "7.0.1",
-    "@testing-library/react": "16.3.3",
-    "@testing-library/user-event": "14.6.8",
-    "@types/canvas-confetti": "1.9.0",
-    "@types/node": "24.19.2",
-    "@types/react": "19.3.0",
-    "@types/react-dom": "19.3.0",
-    "@vitejs/plugin-react": "6.1.2",
-    "eslint": "10.13.0",
-    "eslint-plugin-react-hooks": "7.1.1",
-    "eslint-plugin-react-refresh": "0.5.7",
-    "globals": "17.13.0",
-    "jsdom": "29.1.1",
-    "prettier": "3.9.10",
-    "shadcn": "4.22.1",
-    "tailwindcss": "4.3.3",
-    "tw-animate-css": "1.4.0",
-    "typescript": "6.0.3",
-    "typescript-eslint": "8.72.0",
-    "vite": "8.3.5",
-    "vitest": "4.1.12"
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }
 ```
 

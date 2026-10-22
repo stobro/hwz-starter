@@ -1,7 +1,7 @@
 ---
 description: Genau einen Task bauen, mit Test zuerst
 argument-hint: [Task-Nummer, sonst der erste offene]
-allowed-tools: Read, Glob, Grep, Edit, Write, Bash(npm run *), Bash(npm install), Bash(npm install --no-audit --no-fund), Bash(npx shadcn add *), Bash(node -v), Bash(git status *), Bash(git diff *)
+allowed-tools: Read, Glob, Grep, Edit, Write, Bash(npm run *), Bash(npm install *), Bash(node scripts/setup.mjs), Bash(node scripts/setup.mjs --tested), Bash(npx shadcn add *), Bash(node -v), Bash(git status *), Bash(git diff *)
 ---
 
 # /task: einen Task bauen
@@ -16,15 +16,15 @@ Du machst **genau einen** Task. Danach hörst du auf, auch wenn noch Zeit ist.
 
 Lies `docs/TASKS.md`, `docs/SPEC.md`, `docs/PLAN.md`, `AGENTS.md` und die Teile von `DESIGN.md` und `docs/STACK.md`, die der Task nennt.
 
-- Steht in `$ARGUMENTS` eine Nummer: nimm diesen Task. Sonst den ersten mit `[ ]`.
-- Sind alle Tasks `[x]`: Sag «Alle Tasks erledigt. Weiter mit /review.» und hör auf.
-- Gibt es `docs/TASKS.md` noch nicht gefüllt: Sag «Zuerst /plan ausführen.» und hör auf.
+- Steht in `$ARGUMENTS` eine Nummer: nimm diesen Task. Sonst den ersten Task unter `## Tasks`, der mit `[ ]` beginnt. Das Formatbeispiel oben in der Datei ist kein Task.
+- Sind alle Tasks unter `## Tasks` `[x]`: Sag «Alle Tasks erledigt. Weiter mit /review.» und hör auf.
+- Steht unter `## Tasks` in `docs/TASKS.md` nur «(leer)»: Sag «Zuerst /plan ausführen.» und hör auf.
 
 Wiederhole den Task in **einem Satz**: «Task N: …»
 
 ## Schritt 2: Test zuerst (rot)
 
-- **Task «Projekt einrichten»:** Folge `docs/STACK.md`, Abschnitt «Task 1: Projekt einrichten», Schritt für Schritt und wörtlich. Der Test `src/App.test.tsx` kommt dort mit. Weiter bei Schritt 4.
+- **Task «Projekt einrichten»:** Führe `node scripts/setup.mjs` aus (siehe `docs/STACK.md`, «Task 1: Projekt einrichten»). Schreib in diesem Task keine Datei selbst, das Skript legt alles an, auch den Test `src/App.test.tsx`. Weiter bei Schritt 4.
 - **Alle anderen Tasks:** Schreib zuerst den Test aus «Test zuerst». Führe ihn aus: `npm run test -- --run <testdatei>`. Zeig die Zeile, die das Scheitern belegt (z. B. `FAIL …` oder `Tests  1 failed`). Ist er nicht rot, ist der Test falsch: korrigiere den Test, nicht den Code.
 
 ## Schritt 3: Implementieren
@@ -32,7 +32,7 @@ Wiederhole den Task in **einem Satz**: «Task N: …»
 - Ändere nur die Dateien unter «Dateien» im Task. Brauchst du eine weitere, frag zuerst (eine Frage, 2–3 Optionen).
 - Übernimm Klassen und Verhalten wörtlich aus den Rezepten in `DESIGN.md`. Nur Design-Tokens, keine Hex-Werte.
 - Logik in `model.ts` oder `src/lib/`, Darstellung in `components/`.
-- Neue Pakete nur aus der Erlaubt-Liste in `docs/STACK.md`, mit exakter Version.
+- Neue Pakete nur aus der Erlaubt-Liste in `docs/STACK.md`.
 
 ## Schritt 4: Check (grün)
 
@@ -62,3 +62,5 @@ Check: <letzte Zeile von npm run check>
 Dann schreib genau diesen Satz und warte:
 
 **Bitte im Browser ansehen. Passt es, mit /task weitermachen.**
+
+Antwortet die Person danach mit «passt» oder ähnlich, ist deine ganze Antwort: «Weiter mit /task.» (oder «Weiter mit /review.», wenn alle Tasks erledigt sind). Du beginnst den nächsten Task nicht von selbst.
